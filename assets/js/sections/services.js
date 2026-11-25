@@ -85,7 +85,24 @@ function select(i) {
 }
 function pick(i, hold = 4000) {
   holdUntil = keyboard ? Infinity : performance.now() + hold;
+  if (wide || i === active) return select(i);
+  // stacked layout: the panel above collapses while this one opens, which would pull the tapped row up the
+  // screen — scroll along with the animation so the row stays exactly under the finger
+  const row = buttons[i];
+  const y0 = row.getBoundingClientRect().top;
   select(i);
+  if (RM) return void win.scrollBy(0, row.getBoundingClientRect().top - y0);
+  const t0 = performance.now();
+  const follow = () => {
+    const d = row.getBoundingClientRect().top - y0;
+    if (Math.abs(d) >= 1) {
+      const l = win.__aiLenis;
+      if (l) l.scrollTo(l.scroll + d, { immediate: true });
+      else win.scrollBy(0, d);
+    }
+    if (performance.now() - t0 < 950) requestAnimationFrame(follow);
+  };
+  requestAnimationFrame(follow);
 }
 
 buttons.forEach((b, i) => {
@@ -134,13 +151,15 @@ if (finePointer()) {
   });
 }
 
-/* scroll drives the active channel */
+/* scroll drives the active channel — side-by-side layout only. In the stacked (tablet / phone) layout every
+   panel is about a screen tall, so switching on scroll would collapse and open screen-sized blocks under the
+   reader's thumb (it reads as a fast blink); there the channels open on tap instead. */
 if (!RM && N > 1) {
   const near = nearViewport(acc, '20% 0px 20% 0px');
   let top = 0, h = 1, vh = 1, ok = false, lastAp = -1, lastIdx = -1;
   onTick(
     () => {
-      if (!ok) return;
+      if (!ok || !wide) return;
       const ap = clamp01((vh * 0.72 - top) / (h + vh * 0.54));
       if (Math.abs(ap - lastAp) <= 0.002) return;
       lastAp = ap;
@@ -151,8 +170,10 @@ if (!RM && N > 1) {
       }
     },
     () => {
-      if (!near.on) {
+      if (!near.on || !wide) {
         ok = false;
+        lastIdx = -1;
+        lastAp = -1;
         return;
       }
       const r = acc.getBoundingClientRect();
