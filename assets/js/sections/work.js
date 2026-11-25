@@ -80,9 +80,9 @@ function caseHTML(c, key, cls) {
 }
 function infoHTML(c) {
   return `<div class="rwwk-info-in"><div class="rwwk-il"><p class="rwwk-meta f-m"><span>${esc(c.kind)}</span><span>${esc(c.year)}</span></p>
-  <h3 class="rwwk-title f-d"><a href="#audit">${esc(c.title)}</a></h3></div>
+  <h3 class="rwwk-title f-d"><a href="work-${c.slug}.html">${esc(c.title)}</a></h3></div>
   <div class="rwwk-ir"><p class="rwwk-sum">${esc(c.sum)}</p><div class="rwwk-foot"><span class="rwwk-svs f-m">${c.services.split(';').map((s) => `<span>${esc(s)}</span>`).join('')}</span>
-  <a class="rwwk-read f-m" href="#audit">Read the case<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></div></div></div>`;
+  <a class="rwwk-read f-m" href="work-${c.slug}.html">Read the case<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></div></div></div>`;
 }
 
 /* ------------------------------------------------------------ state */

@@ -351,3 +351,37 @@ export function rollTo(el, text, prefix) {
   el.setAttribute('aria-label', text);
   el._digits = chars;
 }
+
+/**
+ * Counts the number inside a text like "$142k", "38,900" or "6.2×" up from 0 when `run()` is called.
+ * Returns { run, end } — `end()` shows the final text immediately.
+ */
+export function numberText(el, ms = 1600, delay = 200) {
+  const final = el.textContent;
+  const m = final.match(/^([^\d]*)([\d,]*\.?\d+)(.*)$/);
+  if (!m) return { run() {}, end() {} };
+  const n = parseFloat(m[2].replace(/,/g, ''));
+  const dec = m[2].includes('.') ? m[2].split('.')[1].length : 0;
+  const grp = m[2].includes(',');
+  const fmt = (v) => `${m[1]}${grp ? v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toFixed(dec)}${m[3]}`;
+  el.setAttribute('aria-label', final);
+  return {
+    run() {
+      if (reducedMotion()) return (el.textContent = final);
+      const t0 = performance.now() + delay;
+      el.textContent = fmt(0);
+      const step = (t) => {
+        const k = clamp01((t - t0) / ms);
+        el.textContent = fmt(n * (1 - (1 - k) ** 3));
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    },
+    reset() {
+      el.textContent = fmt(0);
+    },
+    end() {
+      el.textContent = final;
+    },
+  };
+}

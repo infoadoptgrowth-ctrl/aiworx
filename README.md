@@ -1,9 +1,21 @@
 # AiWorx LLC — website
 
-A one-page marketing site for AiWorx LLC: hero, clients radar, services, case studies, process funnel,
-numbers, content wall, team, reviews, pricing, FAQ, insights, free-audit CTA and footer, with the
-scroll-driven animations, hover effects and intro loader of the reference design, rebranded to the
-AiWorx logo palette.
+The marketing site for AiWorx LLC, rebuilt from the reference design with its scroll-driven animations,
+hover effects and intro loader, rebranded to the AiWorx logo palette.
+
+## Pages
+
+| File | Page |
+| --- | --- |
+| `index.html` | Home: hero, clients radar, services, case studies, process, numbers, content, team, reviews, pricing, FAQ, insights, free audit |
+| `about.html` | About: story timeline, values, hiring, team, reviews |
+| `services.html` | Services overview: all six channels, process, FAQ |
+| `service-seo.html`, `service-social-media.html`, `service-paid-ads.html`, `service-content.html`, `service-web-design.html`, `service-branding.html` | One page per service |
+| `work.html` | Portfolio grid with channel filter |
+| `work-northside-dental.html`, `work-kettlebrook-coffee.html`, `work-fitloop.html`, `work-haven-realty.html`, `work-lumen-skin.html`, `work-orbit-legal.html` | One page per case study |
+| `contact.html` | Contact form and contact cards |
+
+Pricing and Blog in the menu point to the matching sections on the home page.
 
 It is plain HTML, CSS and JavaScript modules. There is no build step and no framework; the only
 third-party code is [Lenis](https://github.com/darkroomengineering/lenis) for smooth scrolling,
@@ -23,14 +35,15 @@ the folder as-is.
 ## Structure
 
 ```
-index.html                 all page markup, one commented block per section
+*.html                     one file per page, one commented block per section
 assets/
   css/base.css             brand tokens, fonts, shared primitives (buttons, eyebrows, headings, reveals)
   css/sections/*.css       one stylesheet per section
   css/brand.css            AiWorx logo lock-ups + small breakpoint rules
   js/core.js               shared runtime: rAF ticker, breakpoints, in-view reveals, scroll progress,
                            magnetic buttons, Lenis + anchor scrolling, clocks, rolling digits
-  js/sections/*.js         one module per section (behaviour only; markup lives in index.html)
+  js/sections/*.js         one module per section (behaviour only; markup lives in the HTML)
+  js/stories.js            the channel mock-UI animations shared by Services, the Services page and service pages
   vendor/lenis.*           smooth scrolling (MIT)
   img/                     photography, logo variants, favicons
 ```
@@ -63,5 +76,7 @@ name changed to AiWorx. Replace these with real details:
 - Contact details: `hello@aiworxllc.com`, `+1 (212) 555-0186` and "New York" (header menu, FAQ card, footer),
   plus `SITE` in `assets/js/core.js`.
 - Social links in the footer and the mobile menu (they point to the network home pages).
-- The audit form opens a pre-filled email to `SITE.email`; connect it to a form backend or CRM if you need one.
+- The free-audit form sends visitors to `contact.html` with their email and budget filled in. The contact form opens
+  the visitor's email app with the message ready to send to `SITE.email`; connect it to a form backend or CRM
+  (e.g. Formspree, HubSpot) if you want submissions delivered without the email app.
 - Privacy / Terms / Cookies links currently point to the top of the page.

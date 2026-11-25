@@ -36,7 +36,7 @@ const tick = () => (clockEl.textContent = clock(SITE.tz, true));
 tick();
 setInterval(tick, 1000);
 
-/* audit request → pre-filled email to the team */
+/* audit request → contact page with email + budget filled in */
 function submit(e) {
   e.preventDefault();
   const email = form.elements.email;
@@ -44,9 +44,11 @@ function submit(e) {
     email.reportValidity();
     return;
   }
-  const budget = form.elements.budget.value;
-  const body = [`Hi AiWorx team,`, ``, `I'd like a free 30-minute audit of our site, socials and ads.`, ``, `Work email: ${email.value.trim() || '—'}`, `Monthly budget: ${budget || '—'}`].join('\n');
-  window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent('Free audit request')}&body=${encodeURIComponent(body)}`;
+  /* hand the details to the contact page, which pre-fills them */
+  const q = new URLSearchParams();
+  if (email.value.trim()) q.set('email', email.value.trim());
+  if (form.elements.budget.value) q.set('budget', form.elements.budget.value);
+  window.location.href = `contact.html${q.toString() ? `?${q}` : ''}#start`;
 }
 form.addEventListener('submit', submit);
 $('.rwct-go', sec).addEventListener('click', submit);
