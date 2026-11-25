@@ -73,11 +73,33 @@ win.addEventListener('resize', () => applyBreakpoint(false));
  * Calls `cb` once, the first time `el` scrolls into view.
  * Mirrors the reference: threshold = min(t, max(.005, 80px / height)).
  */
+/** Runs `cb` once the intro loader has released the page (html.rw-hold-* removed), or after 9s. */
+export function whenReleased(cb) {
+  const held = () => /(^|\s)rw-hold/.test(root.className);
+  if (!held()) return cb();
+  const mo = new MutationObserver(() => {
+    if (held()) return;
+    mo.disconnect();
+    clearTimeout(to);
+    cb();
+  });
+  mo.observe(root, { attributes: true, attributeFilter: ['class'] });
+  const to = setTimeout(() => {
+    mo.disconnect();
+    cb();
+  }, 9000);
+}
+
 export function whenInView(el, cb, t = 0.16) {
   if (reducedMotion()) {
     cb();
     return () => {};
   }
+  let stop = () => {};
+  whenReleased(() => (stop = observeOnce(el, cb, t)));
+  return () => stop();
+}
+function observeOnce(el, cb, t) {
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries)

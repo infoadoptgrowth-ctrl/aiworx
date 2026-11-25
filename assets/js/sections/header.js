@@ -1,5 +1,5 @@
 /* Header: entrance, glass bar on scroll, hide-on-scroll-down, light/dark ground probe, mobile drawer. */
-import { $, $$, win, doc, onTick, onBreakpoint, magnetic, lockScroll, clock, SITE } from '../core.js';
+import { $, $$, win, doc, onTick, onBreakpoint, magnetic, lockScroll, clock, SITE, whenReleased } from '../core.js';
 
 const hd = $('.rwhd');
 const top = $('.rwhd-top', hd);
@@ -8,10 +8,12 @@ const burger = $('.rwhd-bg', hd);
 const burgerText = $('.rwhd-bg-t', hd);
 
 /* entrance */
-requestAnimationFrame(() => {
-  hd.classList.add('is-in');
-  $$('.rv', hd).forEach((e) => e.classList.add('is-on'));
-});
+whenReleased(() =>
+  requestAnimationFrame(() => {
+    hd.classList.add('is-in');
+    $$('.rv', hd).forEach((e) => e.classList.add('is-on'));
+  }),
+);
 
 /* breakpoints: compact header < 1100, phone < 810, CTA hidden < 370 */
 onBreakpoint((v) => {

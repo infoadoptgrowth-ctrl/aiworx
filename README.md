@@ -1,0 +1,67 @@
+# AiWorx LLC — website
+
+A one-page marketing site for AiWorx LLC: hero, clients radar, services, case studies, process funnel,
+numbers, content wall, team, reviews, pricing, FAQ, insights, free-audit CTA and footer, with the
+scroll-driven animations, hover effects and intro loader of the reference design, rebranded to the
+AiWorx logo palette.
+
+It is plain HTML, CSS and JavaScript modules. There is no build step and no framework; the only
+third-party code is [Lenis](https://github.com/darkroomengineering/lenis) for smooth scrolling,
+vendored in `assets/vendor/`.
+
+## Run it locally
+
+ES modules do not load from `file://`, so serve the folder over HTTP:
+
+```bash
+python3 -m http.server 8080
+```
+
+Then open <http://localhost:8080>. Any static host (Netlify, Vercel, GitHub Pages, S3, nginx) can serve
+the folder as-is.
+
+## Structure
+
+```
+index.html                 all page markup, one commented block per section
+assets/
+  css/base.css             brand tokens, fonts, shared primitives (buttons, eyebrows, headings, reveals)
+  css/sections/*.css       one stylesheet per section
+  css/brand.css            AiWorx logo lock-ups + small breakpoint rules
+  js/core.js               shared runtime: rAF ticker, breakpoints, in-view reveals, scroll progress,
+                           magnetic buttons, Lenis + anchor scrolling, clocks, rolling digits
+  js/sections/*.js         one module per section (behaviour only; markup lives in index.html)
+  vendor/lenis.*           smooth scrolling (MIT)
+  img/                     photography, logo variants, favicons
+```
+
+Breakpoints match the reference: desktop ≥ 1100px, tablet 810–1099px (`.is-tab`) and phone < 810px
+(`.is-ph`). `core.js` sets those classes on every section. Every animation is turned off when the
+visitor has *prefers-reduced-motion* set.
+
+## Brand
+
+The colours come from the logo and are defined once in `assets/css/base.css`:
+
+| Token          | Value     | Use                                   |
+| -------------- | --------- | ------------------------------------- |
+| `--rw-brass`   | `#d4f905` | logo lime: highlights, buttons, rings |
+| `--rw-pop`     | `#7cb203` | logo leaf green: live dots, badges    |
+| `--rw-forest`  | `#3e7600` | logo deep green                       |
+| `--rw-ink`     | `#0d0e10` | logo black: text, dark panels         |
+| `--rw-night`   | `#08090a` | dark sections                         |
+| `--rw-bone`    | `#eeeee8` | paper background                      |
+
+Logo files are in `assets/img/`: `aiworx-logo.png` (for light backgrounds), `aiworx-logo-light.png`
+(white "worx" for dark backgrounds) and `aiworx-mark.png` (the "ai" symbol alone, also used for the favicons).
+
+## Content to replace before launch
+
+The copy, client names, team, reviews and figures are the reference template's sample content, with the
+name changed to AiWorx. Replace these with real details:
+
+- Contact details: `hello@aiworxllc.com`, `+1 (212) 555-0186` and "New York" (header menu, FAQ card, footer),
+  plus `SITE` in `assets/js/core.js`.
+- Social links in the footer and the mobile menu (they point to the network home pages).
+- The audit form opens a pre-filled email to `SITE.email`; connect it to a form backend or CRM if you need one.
+- Privacy / Terms / Cookies links currently point to the top of the page.

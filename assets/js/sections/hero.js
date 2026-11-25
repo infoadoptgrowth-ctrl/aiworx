@@ -1,5 +1,5 @@
 /* Hero: WebGL crowd — grey photo, lime "reach" rings that colour the crowd and pop live result chips. */
-import { $, $$, win, doc, onTick, onBreakpoint, magnetic, clamp01, reducedMotion, finePointer } from '../core.js';
+import { $, $$, win, doc, onTick, onBreakpoint, magnetic, clamp01, reducedMotion, finePointer, whenReleased } from '../core.js';
 
 const hero = $('.rwh');
 const bg = $('.rwh-bg', hero);
@@ -40,7 +40,7 @@ win.addEventListener('resize', () => {
 const enter = () => {
   hero.classList.add('is-in', 'is-on');
 };
-setTimeout(enter, 80);
+whenReleased(() => setTimeout(enter, 80));
 if (RM) hero.classList.add('is-rm');
 magnetic(hero);
 
