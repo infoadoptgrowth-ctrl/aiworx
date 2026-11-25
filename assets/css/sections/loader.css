@@ -1,0 +1,360 @@
+.rwld {
+  display: none;
+}
+html.rwld-go {
+  overflow: hidden !important;
+}
+html.rwld-go .rwld {
+  display: block;
+  animation: rwld-fb 0.5s ease 6s both;
+}
+@keyframes rwld-fb {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.rwld {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  color: var(--rw-cloud);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  --cy: 42%;
+}
+.rwld * {
+  box-sizing: border-box;
+}
+.rwld-sheet {
+  position: absolute;
+  inset: 0;
+  background: var(--rw-night);
+  overflow: hidden;
+  --hole: 0px;
+}
+.rwld.is-exit .rwld-sheet {
+  -webkit-mask-image: radial-gradient(
+    circle at 50% var(--cy),
+    transparent var(--hole),
+    #000 calc(var(--hole) + 1px)
+  );
+  mask-image: radial-gradient(
+    circle at 50% var(--cy),
+    transparent var(--hole),
+    #000 calc(var(--hole) + 1px)
+  );
+}
+.rwld-glow {
+  position: absolute;
+  left: 50%;
+  top: var(--cy);
+  width: 110vmin;
+  height: 110vmin;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--rw-brass) 11%, transparent),
+    transparent
+  );
+  animation: rwld-glow calc(var(--T) * 0.9) ease-out both;
+}
+@keyframes rwld-glow {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+.rwld-cv {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* the mark: a beating dot that grows into the AiWorx mark */
+.rwld-mk {
+  position: absolute;
+  left: 50%;
+  top: var(--cy);
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  display: block;
+}
+.rwld-mk svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.rwld-mc {
+  fill: var(--rw-brass);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rwld-mc calc(var(--T) * 0.56) linear both;
+}
+@keyframes rwld-mc {
+  0% {
+    transform: scale(0);
+  }
+  8% {
+    transform: scale(0.36);
+    animation-timing-function: ease-in-out;
+  }
+  20% {
+    transform: scale(0.22);
+    animation-timing-function: ease-in-out;
+  }
+  34% {
+    transform: scale(0.34);
+    animation-timing-function: ease-in-out;
+  }
+  48% {
+    transform: scale(0.22);
+    animation-timing-function: ease-in-out;
+  }
+  66% {
+    transform: scale(0.24);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.rwld-md {
+  fill: var(--rw-ink);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rwld-md calc(var(--T) * 0.16) cubic-bezier(0.34, 1.56, 0.64, 1)
+    calc(var(--T) * 0.42) both;
+}
+@keyframes rwld-md {
+  from {
+    transform: scale(0);
+  }
+}
+.rwld-ma {
+  fill: none;
+  stroke: var(--rw-ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 26;
+  animation: rwld-ma calc(var(--T) * 0.18) cubic-bezier(0.6, 0, 0.2, 1)
+    calc(var(--T) * 0.44) both;
+}
+.rwld-ma2 {
+  animation-delay: calc(var(--T) * 0.48);
+}
+@keyframes rwld-ma {
+  from {
+    stroke-dashoffset: 26;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* the wordmark resolves letter by letter */
+.rwld-wm {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--cy) + 52px);
+  margin: 0;
+  text-align: center;
+  font-size: clamp(46px, 6.2vw, 92px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-weight: var(--rw-font-dw, 700);
+  white-space: nowrap;
+}
+.rwld-wm > span {
+  display: inline-block;
+  padding: 0 0.1em 0.1em;
+}
+.rwld-ch {
+  display: inline-block;
+  animation: rwld-ch calc(var(--T) * 0.26) cubic-bezier(0.2, 0.8, 0.2, 1)
+    calc(var(--T) * 0.3 + var(--i) * 22ms) both;
+}
+@keyframes rwld-ch {
+  from {
+    opacity: 0;
+    translate: 0 0.42em;
+    filter: blur(10px);
+  }
+}
+/* frame rows */
+.rwld-top,
+.rwld-bot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 0 max(var(--g), calc((100% - clamp(1280px, 92vw, 1520px)) / 2));
+  animation: rwld-row 0.7s ease calc(var(--T) * 0.08) both;
+}
+@keyframes rwld-row {
+  from {
+    opacity: 0;
+  }
+}
+.rwld-top {
+  top: clamp(20px, 3vw, 34px);
+  align-items: center;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rw-cloud) 78%, transparent);
+}
+.rwld-top span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.rwld-bot {
+  bottom: clamp(22px, 3.4vw, 40px);
+}
+.rwld-live {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--rw-brass);
+}
+.rwld-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--rw-brass);
+  animation: rwld-ping 1.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+@keyframes rwld-ping {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+.rwld-count {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rwld-cl {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rw-cloud) 78%, transparent);
+}
+.rwld-cn {
+  font-size: clamp(26px, 2.9vw, 42px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rwld-cn b {
+  font-weight: 400;
+  color: var(--rw-cloud);
+}
+.rwld-cn em {
+  font-style: normal;
+  font-size: 0.42em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rw-brass);
+  vertical-align: 0.5em;
+}
+.rwld-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: right;
+}
+.rwld-lb {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--rw-cloud);
+}
+.rwld-sk {
+  color: color-mix(in srgb, var(--rw-cloud) 78%, transparent);
+}
+/* exit: the type lifts off as the hole opens */
+.rwld.is-exit {
+  pointer-events: none;
+  cursor: default;
+}
+.rwld.is-exit .rwld-wm,
+.rwld.is-exit .rwld-mk {
+  transition:
+    opacity 0.34s ease,
+    scale 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  opacity: 0;
+  scale: 1.14;
+}
+.rwld.is-exit .rwld-top,
+.rwld.is-exit .rwld-bot,
+.rwld.is-exit .rwld-glow {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+.rwld.is-skip * {
+  animation-delay: 0s !important;
+  animation-duration: 0.24s !important;
+}
+/* reduced motion: the finished frame, then a fade */
+html.rwld-rm .rwld * {
+  animation: none !important;
+}
+html.rwld-rm .rwld-cv {
+  display: none;
+}
+html.rwld-rm .rwld.is-exit .rwld-sheet {
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 0;
+  transition: opacity 0.38s ease;
+}
+@media (max-width: 809px) {
+  .rwld {
+    --cy: 40%;
+  }
+  .rwld-mk {
+    width: 54px;
+    height: 54px;
+    margin: -27px 0 0 -27px;
+  }
+  .rwld-wm {
+    top: calc(var(--cy) + 44px);
+    font-size: clamp(40px, 12vw, 58px);
+  }
+  .rwld-bot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .rwld-side {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .rwld-cn {
+    font-size: 30px;
+  }
+}

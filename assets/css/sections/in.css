@@ -1,0 +1,334 @@
+/* 10-20 one gutter */
+.rwin .rw-hd-i {
+  transition-duration: 0.5s !important;
+  transition-delay: 0s !important;
+}
+.rwin .rw-eb {
+  transition-duration: 0.4s !important;
+  transition-delay: 0s !important;
+} /* 10-20: heading in fast */
+.rwin .rw-eb:not(.is-on) {
+  opacity: 0.72;
+  translate: 0 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rw-hd-i {
+    translate: 0 0 !important;
+  }
+  .rw-spark {
+    scale: 1 !important;
+    rotate: 0deg !important;
+    animation: none !important;
+  }
+  .rw-um {
+    clip-path: none !important;
+  }
+  .rw-um img {
+    scale: 1 !important;
+    translate: 0 0 !important;
+  }
+}
+
+.rwin {
+  background: var(--rw-bone);
+  color: var(--rw-ink);
+  padding: clamp(96px, 9vw, 150px) 0 clamp(88px, 8vw, 132px);
+  overflow-x: clip;
+}
+.rwin .rw-it {
+  position: relative;
+  color: var(--rw-ink);
+  font-weight: inherit;
+  padding: 0 0.06em;
+  isolation: isolate;
+}
+.rwin .rw-it::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: 0.12em;
+  bottom: 0.02em;
+  border-radius: 0.16em;
+  background: var(--rw-brass);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1) var(--pd, 0.6s);
+}
+.rwin .rw-hd.is-on .rw-it::before {
+  transform: none;
+}
+.rwin-top {
+  display: grid;
+  grid-template-columns: minmax(0, 7.4fr) minmax(0, 4.6fr);
+  gap: clamp(32px, 5vw, 96px);
+  align-items: end;
+  margin-bottom: clamp(44px, 4.6vw, 72px);
+}
+.rwin-lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 26px;
+}
+.rwin-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  padding-bottom: 6px;
+}
+.rwin-sub {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--rw-mut);
+  max-width: 460px;
+}
+.rwin-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  list-style: none;
+  margin: 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--rw-fog);
+  width: 100%;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.rwin-facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.rwin-facts li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rw-ink);
+  opacity: 0.35;
+}
+/* the crowd panel — an ink screen, the plaza from very high */
+.rwin-panel {
+  position: relative;
+  height: clamp(420px, 36vw, 540px);
+  border-radius: 24px;
+  overflow: hidden;
+  background: radial-gradient(
+    120% 90% at 60% 50%,
+    var(--rw-pine),
+    var(--rw-ink) 70%
+  );
+  color: var(--rw-cloud);
+  isolation: isolate;
+}
+.rwin-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--rw-cloud) 10%, transparent);
+  pointer-events: none;
+}
+.rwin-field {
+  position: absolute;
+  inset: 0;
+}
+.rwin-cv {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: pan-y;
+}
+.rwin-ratio {
+  position: absolute;
+  z-index: 2;
+  left: clamp(22px, 2.6vw, 40px);
+  top: clamp(22px, 2.6vw, 40px);
+  bottom: clamp(22px, 2.6vw, 40px);
+  width: min(300px, 26%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  pointer-events: none;
+}
+.rwin-ratio::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: calc(clamp(22px, 2.6vw, 40px) * -1);
+  top: calc(clamp(22px, 2.6vw, 40px) * -1);
+  bottom: calc(clamp(22px, 2.6vw, 40px) * -1);
+  width: calc(100% + 140px);
+  background: linear-gradient(90deg, var(--rw-ink) 30%, transparent);
+}
+.rwin-ratio-k {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 auto;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rw-cloud) 78%, transparent);
+}
+.rwin-live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rw-brass);
+  animation: rwin-live 1.6s infinite;
+}
+@keyframes rwin-live {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--rw-brass) 70%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+.rwin-ratio-n {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+  font-size: clamp(56px, 6vw, 96px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-weight: var(--rw-font-dw, 700);
+  white-space: nowrap;
+}
+.rwin-ratio-a {
+  font-size: 0.42em;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--rw-cloud) 78%, transparent);
+}
+.rwin-ratio-v {
+  color: var(--rw-brass);
+  font-variant-numeric: tabular-nums;
+}
+.rwin-ratio-t {
+  margin: 0;
+  font-size: clamp(20px, 1.8vw, 28px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.rwin-lab {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  translate: -50% 0;
+  margin-top: clamp(52px, 4.6vw, 64px);
+  opacity: clamp(0, calc((var(--p) - 0.45) * 100000), 1);
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.rwin-lab-1 {
+  margin-top: 0;
+  translate: -50% calc(-100% - clamp(52px, 4.6vw, 64px));
+}
+.rwin-tag {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--rw-brass);
+  color: var(--rw-ink);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rwin-cnt {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--rw-cloud) 88%, var(--rw-night));
+}
+.rwin-num {
+  color: var(--rw-cloud);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+/* tablet */
+.rwin.is-tab .rwin-top {
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.rwin.is-tab .rwin-panel {
+  height: 440px;
+}
+.rwin.is-tab .rwin-ratio {
+  width: 34%;
+}
+.rwin.is-tab .rwin-ratio-n {
+  font-size: 64px;
+}
+/* phone: a taller screen, counter on top, clusters stacked down the left with labels to their right */
+.rwin.is-ph {
+  padding: 72px 0 72px;
+}
+.rwin.is-ph .rwin-top {
+  grid-template-columns: 1fr;
+  gap: 26px;
+  margin-bottom: 36px;
+}
+.rwin.is-ph .rwin-lead {
+  gap: 18px;
+}
+.rwin.is-ph .rwin-sub {
+  font-size: 16px;
+}
+.rwin.is-ph .rwin-facts {
+  gap: 8px 14px;
+}
+.rwin.is-ph .rwin-panel {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.rwin.is-ph .rwin-field {
+  position: relative;
+  inset: auto;
+  height: 360px;
+  flex: none;
+}
+.rwin.is-ph .rwin-ratio {
+  position: relative;
+  inset: auto;
+  width: auto;
+  padding: 22px 20px 4px;
+  gap: 4px;
+}
+.rwin.is-ph .rwin-ratio::before {
+  display: none;
+}
+.rwin.is-ph .rwin-ratio-k {
+  margin: 0 0 10px;
+}
+.rwin.is-ph .rwin-ratio-n {
+  font-size: 58px;
+}
+.rwin.is-ph .rwin-ratio-t {
+  font-size: 22px;
+}
+.rwin.is-ph .rwin-lab {
+  translate: 0 -50%;
+  margin: 0 0 0 54px;
+  width: calc(78% - 64px);
+}
+.rwin.is-ph .rwin-cnt {
+  white-space: normal;
+  line-height: 1.35;
+}
