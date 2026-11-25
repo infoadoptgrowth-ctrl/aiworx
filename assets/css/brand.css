@@ -31,3 +31,11 @@
 /* One DOM for every breakpoint: hide the pieces a breakpoint does not use */
 .rwcl.is-ph .rwcl-deg { display: none; }
 .rwsv.is-h .rwsv-rs { display: none; }
+/* Funnel: pinned scene on desktop, stacked rows on tablet / phone */
+.rwfn:not(.is-pin) .rwfn-pin { display: none; }
+.rwfn.is-pin .rwfn-flat { display: none; }
+.rwnm.is-ph .rwnm-tabs, .rwnm.is-ph .rwnm-range { display: none; }
+
+/* AiWorx app icon on the review notifications */
+.rwrv-ico.ai-ico { display: grid; place-items: center; background: var(--rw-ink); }
+.rwrv-ico.ai-ico .ai-mark { width: 78%; height: 78%; }

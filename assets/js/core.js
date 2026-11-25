@@ -287,3 +287,41 @@ export const SITE = {
   email: 'hello@aiworxllc.com',
   tz: 'America/New_York',
 };
+
+/**
+ * Rolling-digit number: each digit is a vertical reel (0–9) that steps to its new value.
+ * `el` is the wrapper span (e.g. .rwpr-roll); `prefix` is the class stem ("rwpr" → .rwpr-rd).
+ */
+export function rollTo(el, text, prefix) {
+  const prev = el._digits || (el.getAttribute('aria-label') || '').split('');
+  const chars = String(text).split('');
+  const off = prev.length - chars.length;
+  const old = Array.from(el.children);
+  const frag = document.createDocumentFragment();
+  chars.forEach((c, i) => {
+    if (!/\d/.test(c)) {
+      const s = document.createElement('span');
+      s.setAttribute('aria-hidden', 'true');
+      s.textContent = c;
+      frag.appendChild(s);
+      return;
+    }
+    const was = prev[i + off];
+    const steps = Math.max(1, /\d/.test(was || '') ? Math.abs(+c - was) : 1);
+    let rd = old[old.length - (chars.length - i)];
+    if (!rd || !rd.classList.contains(`${prefix}-rd`)) {
+      rd = document.createElement('span');
+      rd.className = `${prefix}-rd`;
+      rd.setAttribute('aria-hidden', 'true');
+      rd.innerHTML = `<span>${'0123456789'.split('').map((d) => `<i>${d}</i>`).join('')}</span>`;
+    }
+    const reel = rd.firstElementChild;
+    reel.style.transitionTimingFunction = `steps(${steps}, end)`;
+    reel.style.transitionDuration = `${Math.min(0.6, 0.07 * steps + 0.08)}s`;
+    reel.style.transform = `translateY(${-Number(c) * 10}%)`;
+    frag.appendChild(rd);
+  });
+  el.replaceChildren(frag);
+  el.setAttribute('aria-label', text);
+  el._digits = chars;
+}
