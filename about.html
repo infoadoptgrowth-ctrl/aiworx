@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/vendor/lenis.css" />
     <link rel="stylesheet" href="assets/css/sections/loader.css" />
+    <link rel="stylesheet" href="assets/css/sections/transition.css" />
     <link rel="stylesheet" href="assets/css/sections/header.css" />
     <link rel="stylesheet" href="assets/css/sections/about.css" />
     <link rel="stylesheet" href="assets/css/sections/team.css" />
@@ -51,6 +52,25 @@
           setTimeout(function () {
             if (!w.__rwldLive) h.classList.remove("rwld-go", "rw-hold-ld", "rwld-rm");
           }, 6500);
+        } catch (e) {}
+      })();
+      (function () {
+        try {
+          if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          var f = JSON.parse(sessionStorage.getItem("rw-pt") || "null");
+          if (!f || Date.now() - (+f.t || 0) > 8000) return;
+          var h = document.documentElement,
+            W = innerWidth,
+            H = innerHeight,
+            x = (+f.x || 0.5) * W,
+            y = (+f.y || 0.5) * H;
+          h.style.setProperty("--rwtr-x", x + "px");
+          h.style.setProperty("--rwtr-y", y + "px");
+          h.style.setProperty("--rwtr-r", Math.ceil(Math.hypot(Math.max(x, W - x), Math.max(y, H - y))) + 24 + "px");
+          h.classList.add("rwtr-arrive", "rw-hold-pt");
+          setTimeout(function () {
+            h.classList.remove("rwtr-arrive", "rw-hold-pt");
+          }, 4000);
         } catch (e) {}
       })();
     </script>
@@ -80,6 +100,14 @@
         ></div
       ></div
     >
+    <!-- ===== Page transition ===== -->
+    <div class="rwtr rwtr-ssr" aria-hidden="true" style="--d: 560ms; pointer-events: none"
+      ><i class="rwtr-lime"></i><i class="rwtr-fill"></i
+      ><div class="rwtr-mid"
+        ><p class="rwtr-k f-m"><i></i>Opening<span>/</span></p
+        ><p class="rwtr-name f-d"><span>Home</span></p></div
+      ><i class="rwtr-dot"></i
+    ></div>
     <!-- ===== Header ===== -->
     <div class="rwhd-root"
       ><div class="rw rwhd f-b" data-rwhd
@@ -97,9 +125,9 @@
               ><ul class="rwhd-lk"
                 ><li><a href="services.html">Services</a></li
                 ><li><a href="work.html">Work</a></li
-                ><li><a href="index.html#pricing">Pricing</a></li
+                ><li><a href="pricing.html">Pricing</a></li
                 ><li><a aria-current="page" href="about.html">About</a></li
-                ><li><a href="index.html#insights">Blog</a></li></ul
+                ><li><a href="blog.html">Blog</a></li></ul
               ></nav
             ><div class="rwhd-act rv" style="--rvd: 220ms; --rvy: -10px"
               ><a class="rw-btn rw-quiet rwhd-cta" data-cur="go" data-mag="true" href="contact.html"
@@ -201,7 +229,7 @@
                       >
                         <path d="M5 12h14M13 5l7 7-7 7"></path></svg></span></a></li
                 ><li style="--i: 3"
-                  ><a href="index.html#pricing" tabindex="-1"
+                  ><a href="pricing.html" tabindex="-1"
                     ><span aria-hidden="true" class="rwhd-dl-n f-m">04</span
                     ><span class="rwhd-dl-m"><span class="rwhd-dl-t f-d">Pricing</span></span
                     ><span aria-hidden="true" class="rwhd-dl-a"
@@ -235,7 +263,7 @@
                       >
                         <path d="M5 12h14M13 5l7 7-7 7"></path></svg></span></a></li
                 ><li style="--i: 5"
-                  ><a href="index.html#insights" tabindex="-1"
+                  ><a href="blog.html" tabindex="-1"
                     ><span aria-hidden="true" class="rwhd-dl-n f-m">06</span
                     ><span class="rwhd-dl-m"><span class="rwhd-dl-t f-d">Blog</span></span
                     ><span aria-hidden="true" class="rwhd-dl-a"
@@ -607,7 +635,7 @@
                 ><span class="rwab-vn f-m">03</span><h3 class="f-d">No long contracts</h3
                 ><p>Month to month after the first 90 days. We keep clients by getting results.</p></li
               ></ul
-            ><a class="rwab-hire rv" href="about.html" style="--rvd: 560ms; --rvy: 20px"
+            ><a class="rwab-hire rv" href="careers.html" style="--rvd: 560ms; --rvy: 20px"
               ><span class="rwab-hire-l f-m"><i aria-hidden="true" class="rw-port"></i>We're hiring · 3 roles</span
               ><span class="rwab-hire-t f-d">SEO strategist, social media producer, paid ads specialist</span
               ><span class="rwab-hire-b f-m"
@@ -716,7 +744,7 @@
                     >Strategy<b aria-hidden="true" class="rwtm-dot"></b></span
                   ><span aria-hidden="true" class="rwtm-idx f-m">01</span></figure
                 ><div class="rwtm-cap"
-                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="#team">Maya Chen</a></h3
+                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="team-maya-chen.html">Maya Chen</a></h3
                   ><p class="rwtm-role">Founder &amp; strategy lead</p></div
                 ><a aria-label="Maya Chen on LinkedIn" class="rwtm-in f-m" href="https://linkedin.com" rel="noopener" target="_blank"
                   ><svg aria-hidden="true" viewbox="0 0 24 24">
@@ -749,7 +777,7 @@
                     >SEO<b aria-hidden="true" class="rwtm-dot"></b></span
                   ><span aria-hidden="true" class="rwtm-idx f-m">02</span></figure
                 ><div class="rwtm-cap"
-                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="#team">Jordan Reyes</a></h3
+                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="team-jordan-reyes.html">Jordan Reyes</a></h3
                   ><p class="rwtm-role">Head of SEO</p></div
                 ><a aria-label="Jordan Reyes on LinkedIn" class="rwtm-in f-m" href="https://linkedin.com" rel="noopener" target="_blank"
                   ><svg aria-hidden="true" viewbox="0 0 24 24">
@@ -782,7 +810,7 @@
                     >Social<b aria-hidden="true" class="rwtm-dot"></b></span
                   ><span aria-hidden="true" class="rwtm-idx f-m">03</span></figure
                 ><div class="rwtm-cap"
-                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="#team">Amara Okafor</a></h3
+                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="team-amara-okafor.html">Amara Okafor</a></h3
                   ><p class="rwtm-role">Social media director</p></div
                 ><a aria-label="Amara Okafor on LinkedIn" class="rwtm-in f-m" href="https://linkedin.com" rel="noopener" target="_blank"
                   ><svg aria-hidden="true" viewbox="0 0 24 24">
@@ -815,7 +843,7 @@
                     >Paid ads<b aria-hidden="true" class="rwtm-dot"></b></span
                   ><span aria-hidden="true" class="rwtm-idx f-m">04</span></figure
                 ><div class="rwtm-cap"
-                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="#team">Liam Novak</a></h3
+                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="team-liam-novak.html">Liam Novak</a></h3
                   ><p class="rwtm-role">Paid ads lead</p></div
                 ><a aria-label="Liam Novak on LinkedIn" class="rwtm-in f-m" href="https://linkedin.com" rel="noopener" target="_blank"
                   ><svg aria-hidden="true" viewbox="0 0 24 24">
@@ -848,7 +876,7 @@
                     >Content<b aria-hidden="true" class="rwtm-dot"></b></span
                   ><span aria-hidden="true" class="rwtm-idx f-m">05</span></figure
                 ><div class="rwtm-cap"
-                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="#team">Sofia Marín</a></h3
+                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="team-sofia-marin.html">Sofia Marín</a></h3
                   ><p class="rwtm-role">Content lead</p></div
                 ><a aria-label="Sofia Marín on LinkedIn" class="rwtm-in f-m" href="https://linkedin.com" rel="noopener" target="_blank"
                   ><svg aria-hidden="true" viewbox="0 0 24 24">
@@ -881,7 +909,7 @@
                     >Design<b aria-hidden="true" class="rwtm-dot"></b></span
                   ><span aria-hidden="true" class="rwtm-idx f-m">06</span></figure
                 ><div class="rwtm-cap"
-                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="#team">Theo Park</a></h3
+                  ><h3 class="rwtm-name f-d"><a class="rwtm-link" href="team-theo-park.html">Theo Park</a></h3
                   ><p class="rwtm-role">Design lead</p></div
                 ><a aria-label="Theo Park on LinkedIn" class="rwtm-in f-m" href="https://linkedin.com" rel="noopener" target="_blank"
                   ><svg aria-hidden="true" viewbox="0 0 24 24">
@@ -1272,7 +1300,7 @@
                     ><li
                       ><a href="#team"><span>Team</span></a></li
                     ><li
-                      ><a href="about.html"><span>Careers</span></a></li
+                      ><a href="careers.html"><span>Careers</span></a></li
                     ><li
                       ><a href="contact.html"><span>Contact</span></a></li
                     ></ul
@@ -1281,9 +1309,9 @@
                   ><p class="rwft-ct f-m">Resources</p
                   ><ul
                     ><li
-                      ><a href="index.html#insights"><span>Blog</span></a></li
+                      ><a href="blog.html"><span>Blog</span></a></li
                     ><li
-                      ><a href="index.html#pricing"><span>Pricing</span></a></li
+                      ><a href="pricing.html"><span>Pricing</span></a></li
                     ><li
                       ><a href="index.html#faq"><span>FAQ</span></a></li
                     ></ul
@@ -1314,9 +1342,9 @@
             ><div class="rwft-legal f-m"
               ><span>© <span data-year>2026</span> AiWorx</span
               ><ul
-                ><li><a href="index.html">Privacy</a></li
-                ><li><a href="index.html">Terms</a></li
-                ><li><a href="index.html">Cookies</a></li></ul
+                ><li><a href="privacy.html">Privacy</a></li
+                ><li><a href="terms.html">Terms</a></li
+                ><li><a href="cookies.html">Cookies</a></li></ul
               ><span class="rwft-made">AiWorx LLC</span
               ><span class="rwft-time"
                 ><i aria-hidden="true" class="rwft-live"></i>Local time <span data-clock>--:--</span> · New York</span
@@ -1328,6 +1356,7 @@
     ></div>
     <script type="module" src="assets/js/sections/loader.js"></script>
     <script type="module" src="assets/js/core.js"></script>
+    <script type="module" src="assets/js/sections/transition.js"></script>
     <script type="module" src="assets/js/sections/header.js"></script>
     <script type="module" src="assets/js/sections/about.js"></script>
     <script type="module" src="assets/js/sections/team.js"></script>

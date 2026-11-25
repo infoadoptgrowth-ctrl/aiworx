@@ -14,8 +14,18 @@ hover effects and intro loader, rebranded to the AiWorx logo palette.
 | `work.html` | Portfolio grid with channel filter |
 | `work-northside-dental.html`, `work-kettlebrook-coffee.html`, `work-fitloop.html`, `work-haven-realty.html`, `work-lumen-skin.html`, `work-orbit-legal.html` | One page per case study |
 | `contact.html` | Contact form and contact cards |
+| `pricing.html` | Retainers with monthly/quarterly toggle, side-by-side plan comparison, FAQ |
+| `blog.html` | Articles with topic filter, newsletter sign-up |
+| `blog-local-seo-2026.html`, `blog-reels-that-sell.html`, `blog-roas-is-not-profit.html`, `blog-content-calendar.html`, `blog-landing-pages.html`, `blog-agency-or-in-house.html` | One page per article (share links, reading-progress ring) |
+| `careers.html` | Open roles, perks, hiring steps |
+| `team-maya-chen.html`, `team-jordan-reyes.html`, `team-amara-okafor.html`, `team-liam-novak.html`, `team-sofia-marin.html`, `team-theo-park.html` | One page per team member |
+| `privacy.html`, `terms.html`, `cookies.html` | Legal pages with a contents rail |
+| `404.html` | "Signal lost" page (most static hosts serve `404.html` for unknown URLs automatically) |
 
-Pricing and Blog in the menu point to the matching sections on the home page.
+Moving between pages plays the same transition as the reference: a lime-rimmed circle grows from the click
+point and names the page being opened, and the next page opens by shrinking it back to that point
+(`assets/js/sections/transition.js`, plus a short inline script in each page's `<head>` that covers the new page
+before it paints). Links with `data-no-trans` skip it.
 
 It is plain HTML, CSS and JavaScript modules. There is no build step and no framework; the only
 third-party code is [Lenis](https://github.com/darkroomengineering/lenis) for smooth scrolling,
