@@ -1,0 +1,28 @@
+# Apache / LiteSpeed settings for AiWorx (shared hosting, e.g. cPanel / Hostinger)
+
+# never show a file listing of a folder
+Options -Indexes
+DirectoryIndex index.html
+
+# unknown addresses show the "Signal lost" page
+ErrorDocument 404 /404.html
+
+# ES modules must be served as JavaScript
+AddType text/javascript .js .mjs
+AddType image/webp .webp
+
+# Force https: remove the "#" from the four lines below ONLY after the SSL certificate is active
+# (the browser no longer says "Not secure"), otherwise visitors get a certificate error.
+# RewriteEngine On
+# RewriteCond %{HTTPS} !=on
+# RewriteCond %{HTTP:X-Forwarded-Proto} !https
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# cache images, fonts, CSS and JS for a week
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 7 days"
+  ExpiresByType image/png "access plus 7 days"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType text/javascript "access plus 7 days"
+</IfModule>
