@@ -60,3 +60,15 @@
   animation: ai-ld-mark calc(var(--T, 2400ms) * 0.22) cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--T, 2400ms) * 0.4) both;
 }
 @keyframes ai-ld-mark { from { scale: 0; opacity: 0; rotate: -12deg; } }
+
+/* Footer curtain: real overlay elements (driven from JS) instead of --rv pseudo-elements,
+   so revealing the footer never restyles its content */
+.rw-rev.is-act > .rw-rev-in::before,
+.rw-rev.is-act > .rw-rev-in::after { content: none; }
+.ai-rev-shadow, .ai-rev-shade { position: absolute; left: 0; right: 0; top: 0; pointer-events: none; will-change: transform, opacity; }
+.ai-rev-shadow { z-index: 40; height: 120px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)); opacity: 0; }
+.ai-rev-shade { z-index: 39; background: #000; opacity: 0; }
+.rw-rev:not(.is-act) .ai-rev-shadow, .rw-rev:not(.is-act) .ai-rev-shade { display: none; }
+
+/* Elements moved every frame get their own compositor layer */
+.rwfd-col, .rwcl-sweep, .rwpr-card, .rwh-bg, .rwh-cur, .rwwk-cur { will-change: transform; }

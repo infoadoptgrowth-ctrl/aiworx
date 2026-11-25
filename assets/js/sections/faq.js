@@ -5,6 +5,7 @@ const sec = $('.rwfq');
 const list = $('.rwfq-list', sec);
 const rows = $$('.rwfq-row', sec);
 const RM = reducedMotion();
+const line = $('.rwfq-line', sec); // the only element that reads --f
 
 bootSection(sec, { staticFlags: RM ? [] : ['is-set'] });
 magnetic(sec);
@@ -34,7 +35,7 @@ if (!RM) {
       if (Math.abs(f - target) < 5e-4) f = target;
       if (Math.abs(f - last) < 4e-4) return;
       last = f;
-      list.style.setProperty('--f', f.toFixed(4));
+      line.style.setProperty('--f', f.toFixed(4));
       let k = -1;
       marks.forEach((m, i) => f >= m && (k = i));
       if (k !== hit) {

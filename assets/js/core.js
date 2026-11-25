@@ -157,11 +157,13 @@ export function nearViewport(el, margin = '25% 0px 25% 0px') {
 }
 
 /**
- * Smoothed scroll progress for a section:
- *   --sp  0 → 1 while the section travels through the viewport
- *   --pp  0 → 1 while a section taller than the viewport is "pinned"
+ * Smoothed scroll progress for a section, reported to `cb(sp, pp)`:
+ *   sp  0 → 1 while the section travels through the viewport
+ *   pp  0 → 1 while a section taller than the viewport is "pinned"
+ * `--sp` is written only onto `targets` — the few elements whose CSS reads it. Writing a custom
+ * property on a whole section would force the browser to restyle every element inside it each frame.
  */
-export function scrollProgress(el, cb, ease = 0.14) {
+export function scrollProgress(el, cb, { targets = [], ease = 0.14 } = {}) {
   const near = nearViewport(el);
   let top = 0, height = 1, vh = 1, sp = -1, pp = -1, last = -9, settled = false, ready = false;
   const stop = onTick(
@@ -181,8 +183,10 @@ export function scrollProgress(el, cb, ease = 0.14) {
       settled = sp === tSp && pp === tPp;
       if (Math.abs(sp + pp - last) < 3e-4) return;
       last = sp + pp;
-      el.style.setProperty('--sp', sp.toFixed(4));
-      el.style.setProperty('--pp', pp.toFixed(4));
+      if (targets.length) {
+        const v = sp.toFixed(4);
+        for (const t of targets) t.style.setProperty('--sp', v);
+      }
       cb && cb(sp, pp);
     },
     () => {

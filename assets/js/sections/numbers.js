@@ -1,6 +1,6 @@
 /* The numbers: lime panel with a dark client report. Odometer digits roll in, sparklines draw,
    hovering a sparkline shows the month value. */
-import { $, $$, bootSection, whenInView, reducedMotion } from '../core.js';
+import { $, $$, bootSection, whenInView, scrollProgress, reducedMotion } from '../core.js';
 
 const sec = $('.rwnm');
 const dash = $('.rwnm-dash', sec);
@@ -11,6 +11,8 @@ const RM = reducedMotion();
 bootSection(sec);
 if (!RM) sec.classList.add('is-live');
 sec.addEventListener('rw:on', () => sec.classList.add('is-in'));
+/* sparklines draw with scroll — only the four chart svgs receive --sp */
+if (!RM) scrollProgress(sec, null, { targets: $$('.rwnm-sp svg', sec) });
 
 /* odometers: reels sit at 0 until the report scrolls in, then step to their digit */
 const odos = $$('.rwnm-odo', sec);

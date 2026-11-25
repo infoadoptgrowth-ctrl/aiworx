@@ -43,11 +43,22 @@ onBreakpoint((v) => {
 
 /* ---------------------------------------------------------- scroll fan-out */
 if (!RM)
-  scrollProgress(sec, (sp) => {
-    if (phone) return;
-    sec.style.setProperty('--f', easeIO((sp - 0.08) / 0.3).toFixed(4));
-    sec.style.setProperty('--k', clamp01((sp - 0.22) / 0.26).toFixed(4));
-  });
+  {
+    /* --f / --k go only on the elements that read them (glow + cards), not on the whole section */
+    const targets = [$('.rwpr-glow', sec), ...cards];
+    scrollProgress(sec, (sp) => {
+      if (phone) {
+        for (const t of targets) t.style.removeProperty('--f'), t.style.removeProperty('--k');
+        return;
+      }
+      const f = easeIO((sp - 0.08) / 0.3).toFixed(4);
+      const k = clamp01((sp - 0.22) / 0.26).toFixed(4);
+      for (const t of targets) {
+        t.style.setProperty('--f', f);
+        t.style.setProperty('--k', k);
+      }
+    });
+  }
 
 /* ---------------------------------------------------------- billing toggle */
 const fmt = (s) => Math.round(parseFloat(s)).toLocaleString('en-US');

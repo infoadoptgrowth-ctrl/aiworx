@@ -25,6 +25,11 @@ if (!RM) {
   setH();
   new ResizeObserver(setH).observe(revIn);
   rev.classList.add('is-act');
+  /* the lifting edge's shadow and the dimming shade are real elements styled directly, so the
+     curtain never restyles the footer's content (writing --rv on the wrapper did, every frame) */
+  const shadow = Object.assign(doc.createElement('i'), { className: 'ai-rev-shadow' });
+  const shade = Object.assign(doc.createElement('i'), { className: 'ai-rev-shade' });
+  revIn.append(shadow, shade);
   let near = true, rv = -1, last = -1, h = 0, vh = 1, top = 0, ok = false;
   new IntersectionObserver((e) => (near = e[0].isIntersecting), { rootMargin: '30% 0px 30% 0px' }).observe(rev);
   onTick(
@@ -35,7 +40,11 @@ if (!RM) {
       if (Math.abs(t - rv) < 5e-4) rv = t;
       if (Math.abs(rv - last) < 4e-4) return;
       last = rv;
-      rev.style.setProperty('--rv', rv.toFixed(4));
+      shadow.style.transform = `translate3d(0,${((1 - rv) * h).toFixed(1)}px,0)`;
+      shadow.style.opacity = String(Math.min(1, rv * (1 - rv) * 9));
+      shade.style.height = `${h}px`;
+      shade.style.opacity = String((1 - rv) * 0.16);
+      wmWrap.style.setProperty('--rv', rv.toFixed(4));
     },
     () => {
       if (!near) {

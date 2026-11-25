@@ -12,6 +12,7 @@ const AVATARS = ['#D4F905', '#7CB203', '#E3F79A', '#B6E35A', '#A6D96A', '#C6EB5C
 const SPEEDS = [1, 0.72, 1.12, 0.84, 0.96];
 const RM = reducedMotion();
 
+let dirtyWall = () => {}; // set once the scroll driver is running
 const sec = $('.rwfd');
 const wall = $('.rwfd-wall', sec);
 
@@ -49,7 +50,7 @@ function render(v) {
   const rows = Math.max(Math.ceil(POSTS.length / cols), v.ph ? 6 : 4);
   let html = '';
   for (let c = 0; c < cols; c++) {
-    html += `<div class="rwfd-col" style="--dir:${c % 2 ? 1 : -1};--spd:${SPEEDS[c % SPEEDS.length]}">`;
+    html += `<div class="rwfd-col" data-dir="${c % 2 ? 1 : -1}" data-spd="${SPEEDS[c % SPEEDS.length]}" style="--dir:${c % 2 ? 1 : -1};--spd:${SPEEDS[c % SPEEDS.length]}">`;
     for (let r = 0; r < rows; r++) {
       const i = r * cols + c;
       html += card(POSTS[(i < POSTS.length ? i : i + 3) % POSTS.length], c, r);
@@ -58,15 +59,23 @@ function render(v) {
   }
   wall.style.setProperty('--cols', cols);
   wall.innerHTML = html;
+  dirtyWall();
 }
 onBreakpoint(render);
 
+/* Columns drift against each other with scroll and skew with scroll speed. The transform is written
+   straight onto each column (no inherited custom properties), so only the compositor does the work. */
 if (!RM) {
-  scrollProgress(sec);
-  /* skew the wall with scroll velocity */
+  const T = 190; // px of drift at the ends of the scroll range
+  let sp = 0.5, sk = 0, dirty = true;
+  dirtyWall = () => (dirty = true);
+  scrollProgress(sec, (s) => {
+    sp = s;
+    dirty = true;
+  });
   const near = { on: true };
   new IntersectionObserver((e) => (near.on = e[0].isIntersecting), { rootMargin: '20% 0px 20% 0px' }).observe(wall);
-  let y = 0, prev = -1, vel = 0, sk = 0, last = 0;
+  let y = 0, prev = -1, vel = 0;
   onTick(
     () => {
       if (prev < 0) {
@@ -75,14 +84,20 @@ if (!RM) {
       }
       const d = y - prev;
       prev = y;
-      if (!near.on && Math.abs(sk) < 0.01) return;
+      if (!near.on) return;
       vel += (d - vel) * 0.25;
       const target = Math.max(-4, Math.min(4, vel * 0.16));
-      sk += (target - sk) * 0.14;
-      if (Math.abs(sk) < 0.01) sk = 0;
-      if (Math.abs(sk - last) < 0.02) return;
-      last = sk;
-      wall.style.setProperty('--sk', `${sk.toFixed(2)}deg`);
+      const nsk = Math.abs(sk + (target - sk) * 0.14) < 0.01 ? 0 : sk + (target - sk) * 0.14;
+      if (Math.abs(nsk - sk) >= 0.02 || (nsk === 0 && sk !== 0)) {
+        sk = nsk;
+        dirty = true;
+      }
+      if (!dirty) return;
+      dirty = false;
+      for (const col of wall.children) {
+        const off = (sp - 0.5) * 2 * Number(col.dataset.dir) * Number(col.dataset.spd) * T;
+        col.style.transform = `translate3d(0,calc(-50% + ${off.toFixed(1)}px),0) skewY(${sk.toFixed(2)}deg)`;
+      }
     },
     () => (y = win.scrollY),
   );

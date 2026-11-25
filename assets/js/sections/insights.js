@@ -11,9 +11,13 @@ const easeIO = (v) => {
 bootSection(sec, { staticFlags: RM ? [] : ['is-set'] });
 magnetic(sec);
 
-if (!RM)
+if (!RM) {
+  /* write --u straight onto the three image frames that unmask */
+  const frames = Array.from(sec.querySelectorAll('[style*="--u:"]'));
   scrollProgress(sec, (sp) => {
     const ph = viewport().ph;
-    for (let n = 0; n < 3; n++)
-      sec.style.setProperty(`--u${n}`, easeIO((sp - (ph ? 0.04 : 0.14) - n * (ph ? 0.09 : 0.07)) / 0.34).toFixed(4));
+    frames.forEach((el, n) =>
+      el.style.setProperty('--u', easeIO((sp - (ph ? 0.04 : 0.14) - n * (ph ? 0.09 : 0.07)) / 0.34).toFixed(4)),
+    );
   });
+}

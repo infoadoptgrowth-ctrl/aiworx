@@ -196,7 +196,8 @@ function startGL() {
 
   let W = 1, H = 1, dpr = 1, diag = 1;
   const resize = () => {
-    dpr = Math.min(win.devicePixelRatio || 1, 1.6);
+    // the scene is a soft greyscale photo; 1.25× density looks identical and halves GPU fill on retina
+    dpr = Math.min(win.devicePixelRatio || 1, 1.25);
     const r = hero.getBoundingClientRect();
     W = Math.max(1, r.width);
     H = Math.max(1, r.height);
@@ -272,7 +273,7 @@ function startGL() {
     lastPulse = now();
   });
 
-  let visible = true, raf = 0, scrollK = 0;
+  let visible = true, raf = 0, scrollK = 0, lastSy = -1;
   const firstAt = RM ? 0 : 1.6;
   const P = new Float32Array(32);
   function frame() {
@@ -319,7 +320,11 @@ function startGL() {
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
     checkChips(t);
-    hero.style.setProperty('--sy', scrollK.toFixed(4));
+    /* background parallax: written straight onto the background layer, and only when it moves */
+    if (Math.abs(scrollK - lastSy) > 1e-4) {
+      lastSy = scrollK;
+      bg.style.translate = `0 ${(scrollK * 14).toFixed(3)}%`;
+    }
     raf = requestAnimationFrame(frame);
   }
   new IntersectionObserver((e) => {

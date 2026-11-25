@@ -25,7 +25,11 @@ new ResizeObserver(centre).observe(sec);
 setTimeout(centre, 700);
 setTimeout(centre, 2200);
 
-if (!RM) scrollProgress(sec, (sp) => sec.style.setProperty('--f', easeIO((sp - (viewport().ph ? 0.2 : 0.14)) / 0.44).toFixed(4)));
+if (!RM) {
+  /* only the radar rings read --f */
+  const rings = $('.rwct-rings', sec);
+  scrollProgress(sec, (sp) => rings.style.setProperty('--f', easeIO((sp - (viewport().ph ? 0.2 : 0.14)) / 0.44).toFixed(4)));
+}
 
 /* live clock */
 const tick = () => (clockEl.textContent = clock(SITE.tz, true));

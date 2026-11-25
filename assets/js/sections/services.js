@@ -130,10 +130,8 @@ if (!RM && N > 1) {
     () => {
       if (!ok) return;
       const ap = clamp01((vh * 0.72 - top) / (h + vh * 0.54));
-      if (Math.abs(ap - lastAp) > 0.002) {
-        lastAp = ap;
-        acc.style.setProperty('--ap', ap.toFixed(3));
-      }
+      if (Math.abs(ap - lastAp) <= 0.002) return;
+      lastAp = ap;
       const idx = Math.min(N - 1, Math.floor(ap * N));
       if (idx !== lastIdx) {
         lastIdx = idx;
