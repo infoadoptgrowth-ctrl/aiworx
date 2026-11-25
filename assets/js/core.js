@@ -22,9 +22,22 @@ export const $$ = (sel, el = doc) => Array.from(el.querySelectorAll(sel));
 
 /* ------------------------------------------------------------------ ticker */
 const tick = { pre: new Set(), reads: new Set(), subs: new Set(), raf: 0 };
+/* Reads (getBoundingClientRect & co.) force the browser to finish style + layout, so they only run when the
+   page has scrolled or resized — or every 15th frame as a safety net for layout that moves on its own. */
+/* (scroll and resize are tracked with passive listeners: reading window.scrollY inside the frame would itself
+   force a layout every frame) */
+let sinceRead = 0, dirty = true;
+/** Force the next frame to re-measure (call after changing layout from code). */
+export const invalidate = () => (dirty = true);
+win.addEventListener('scroll', invalidate, { passive: true });
+win.addEventListener('resize', invalidate, { passive: true });
 function frame(t) {
   tick.pre.forEach((f) => f(t));
-  tick.reads.forEach((f) => f(t));
+  if (dirty || ++sinceRead >= 15) {
+    sinceRead = 0;
+    dirty = false;
+    tick.reads.forEach((f) => f(t));
+  }
   tick.subs.forEach((f) => f(t));
   tick.raf = requestAnimationFrame(frame);
 }
@@ -67,6 +80,17 @@ function applyBreakpoint(force) {
 }
 applyBreakpoint(true);
 win.addEventListener('resize', () => applyBreakpoint(false));
+
+/* ------------------------------------------------------- idle sections */
+/* Sections well outside the viewport get .is-idle, which pauses their looping CSS animations
+   (pulses, blinks, marquees, mock-UI loops) so the browser stops repainting things nobody can see. */
+{
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => e.target.classList.toggle('is-idle', !e.isIntersecting)),
+    { rootMargin: '20% 0px 20% 0px' },
+  );
+  $$('.rw:not(.rwhd)').forEach((el) => io.observe(el));
+}
 
 /* ----------------------------------------------------------------- reveals */
 /**

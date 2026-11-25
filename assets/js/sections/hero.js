@@ -197,7 +197,7 @@ function startGL() {
   let W = 1, H = 1, dpr = 1, diag = 1;
   const resize = () => {
     // the scene is a soft greyscale photo; 1.25× density looks identical and halves GPU fill on retina
-    dpr = Math.min(win.devicePixelRatio || 1, 1.25);
+    dpr = Math.min(win.devicePixelRatio || 1, FINE ? 1.25 : 1); // phones: 1x is plenty under the grey + blur look
     const r = hero.getBoundingClientRect();
     W = Math.max(1, r.width);
     H = Math.max(1, r.height);

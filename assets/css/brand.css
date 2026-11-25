@@ -78,3 +78,40 @@
 .rw [data-own-on]:not(.is-on) .rv-f { opacity: 0.72; translate: 0 var(--rvy, 6px); }
 .rwco-ico:has(.ai-mark) { background: var(--rw-ink); }
 .rwco-ico .ai-mark { width: 80%; height: 80%; }
+
+/* ==========================================================================
+   Performance (mobile Safari in particular)
+   ========================================================================== */
+
+/* Looping animations stop while a section is off-screen, and inside collapsed Services panels */
+.rw.is-idle *,
+.rw.is-idle *::before,
+.rw.is-idle *::after,
+.rwsv-p:not(.is-open) .rwsv-pc *,
+.rwsv-p:not(.is-open) .rwsv-pc *::before,
+.rwsv-p:not(.is-open) .rwsv-pc *::after {
+  animation-play-state: paused !important;
+}
+
+/* A backdrop blur behind an opaque (solid / quiet) or fully transparent (ghost on chalk) button face
+   can't be seen, but still costs a full blur pass every frame */
+.rw-btn.rw-solid .rw-face,
+.rw-btn.rw-quiet .rw-face,
+.rw:not(.rw-dark) .rw-btn.rw-ghost .rw-face,
+.rw-lt .rw-btn.rw-ghost .rw-face {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Touch devices: no backdrop blur at all except the header's glass bar (blur is the single most
+   expensive effect while scrolling on iPhone); the translucent backgrounds stay, so labels stay legible */
+@media (hover: none) {
+  .rw *:not(.rwhd-bar) {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Services accordion: height pinned from JS (it never changes when panels swap), so its panel
+   animations are laid out inside the accordion only, not across the whole page */
+.rwsv-acc.is-locked { contain: size layout; }

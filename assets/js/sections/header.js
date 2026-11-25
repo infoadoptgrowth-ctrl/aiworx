@@ -64,6 +64,8 @@ function probeLight() {
 const want = { glass: false, hid: false, lt: false };
 const cur = { glass: false, hid: false, lt: false };
 let lastY = win.scrollY, lastProbeT = -1e9, lastProbeY = -1e9;
+let scrollY = win.scrollY; // cached from the scroll event; reading it in the frame would force a layout
+win.addEventListener('scroll', () => (scrollY = win.scrollY), { passive: true });
 onTick(
   () => {
     for (const k of ['glass', 'hid', 'lt']) {
@@ -74,7 +76,7 @@ onTick(
     }
   },
   (t) => {
-    const y = win.scrollY;
+    const y = scrollY;
     if (Math.abs(y - lastY) > 6) {
       if (y > lastY && y > 140) want.hid = true;
       else if (y < lastY) want.hid = false;
@@ -83,7 +85,7 @@ onTick(
     const open = hd.classList.contains('is-open');
     if (open || top.matches(':focus-within')) want.hid = false;
     want.glass = y > 40;
-    if (t - lastProbeT > 220 || Math.abs(y - lastProbeY) > 90) {
+    if (t - lastProbeT > 400 || Math.abs(y - lastProbeY) > 160) {
       lastProbeT = t;
       lastProbeY = y;
       want.lt = !open && probeLight();

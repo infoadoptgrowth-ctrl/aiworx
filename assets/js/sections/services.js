@@ -1,6 +1,6 @@
 /* Services: six-channel accordion. Scroll switches channels; hover / click / arrow keys pick one.
    The open channel's mock UI plays its little story (SERP climb, likes, ad gauges, article typing). */
-import { $, $$, win, onTick, onBreakpoint, bootSection, magnetic, clamp01, reducedMotion, finePointer, nearViewport } from '../core.js';
+import { $, $$, win, onTick, onBreakpoint, bootSection, magnetic, clamp01, reducedMotion, finePointer, nearViewport, invalidate } from '../core.js';
 import { playStory } from '../stories.js';
 
 const sec = $('.rwsv');
@@ -25,6 +25,17 @@ let keyboard = false;
 let stopRun = () => {};
 
 /* ------------------------------------------------------------- layout */
+/* The open panel grows while the previous one shrinks by the same amount, so the accordion's total height
+   never changes. Pinning that height (with CSS containment) keeps panel switches from re-laying out the whole
+   page every frame — the single biggest cost on phones. */
+function lockHeight() {
+  acc.classList.remove('is-locked');
+  acc.style.height = '';
+  const h = acc.offsetHeight;
+  acc.style.height = `${h}px`;
+  acc.classList.add('is-locked');
+  invalidate();
+}
 function measure() {
   if (wide) {
     const cw = parseFloat(getComputedStyle(acc).getPropertyValue('--cw')) || 92;
@@ -34,6 +45,7 @@ function measure() {
     $$('.rwsv-pin', acc).forEach((p) => (h = Math.max(h, p.scrollHeight)));
     if (h > 0) acc.style.setProperty('--oh', `${Math.ceil(h)}px`);
   }
+  lockHeight();
 }
 const ro = new ResizeObserver(measure);
 ro.observe(acc);
