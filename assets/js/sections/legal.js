@@ -13,8 +13,10 @@ bootSection(sec, { threshold: 0.02 });
 magnetic(sec);
 
 /* the Privacy / Terms / Cookies switcher marks the current page */
-const here = location.pathname.split('/').pop() || 'index.html';
-$$('.rwlg-pages a', sec).forEach((a) => (a.getAttribute('href') === here ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+// compare without ".html": hosts with clean URLs (Vercel) serve privacy.html at /privacy
+const bare = (p) => p.split(/[?#]/)[0].split('/').pop().replace(/\.html$/, '') || 'index';
+const here = bare(location.pathname);
+$$('.rwlg-pages a', sec).forEach((a) => (bare(a.getAttribute('href')) === here ?a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
 
 const items = $$('li', toc);
 const targets = items.map((li) => document.getElementById($('a', li).getAttribute('href').slice(1))).filter(Boolean);

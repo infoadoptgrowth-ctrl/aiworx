@@ -83,7 +83,9 @@ if (el) {
       } catch {
         return;
       }
-      if (url.origin !== location.origin || (url.pathname === location.pathname && url.search === location.search)) return;
+      // same page? compare without ".html" / "index" (clean-URL hosts such as Vercel drop them)
+      const bare = (p) => p.replace(/(index)?(\.html)?$/, '').replace(/\/$/, '');
+      if (url.origin !== location.origin || (bare(url.pathname) === bare(location.pathname) && url.search === location.search)) return;
       e.preventDefault();
       e.stopPropagation();
       busy = true;
