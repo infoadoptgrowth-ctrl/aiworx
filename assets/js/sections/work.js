@@ -1,14 +1,14 @@
 /* Case studies: before/after viewer. Scrolling wipes from "before" to "after" while the number counts up;
    drag (or arrow keys) to compare; tabs autoplay through the six clients. */
-import { $, $$, win, onTick, bootSection, magnetic, clamp01, reducedMotion, finePointer } from '../core.js';
+import { $, $$, win, onTick, bootSection, magnetic, clamp01, reducedMotion, finePointer, srcsetFor } from '../core.js';
 
 const CASES = [
-  { slug: 'northside-dental', name: 'Northside Dental', title: 'From page 4 to the top 3 for “dentist near me”', kind: 'Dental clinic', services: 'SEO;Content', metric: 'Organic visits a month', from: '4,200', to: '38,900', unit: '', year: '2025', sum: 'A local SEO rebuild: 60 location pages, 180 reviews and a content plan for every treatment.', img: 'assets/img/iQ0lX69C3YgeRjqffxWadnnAmnc.webp' },
-  { slug: 'kettlebrook-coffee', name: 'Kettlebrook Coffee', title: 'A coffee brand people film for us', kind: 'Food & drink', services: 'Social media;Content', metric: 'Instagram followers', from: '8,100', to: '96,400', unit: '', year: '2025', sum: 'Three reels a week shot in the roasteries turned a local brand into a national one.', img: 'assets/img/myjp4zr3op66cJhewFtasNpY5I.webp' },
-  { slug: 'fitloop', name: 'Fitloop', title: 'Paid ads that pay for themselves in 11 days', kind: 'Fitness app', services: 'Paid ads', metric: 'Return on ad spend', from: '1.4', to: '6.2', unit: '×', year: '2025', sum: 'We rebuilt the Meta account around creative testing and cut the cost per trial by 58%.', img: 'assets/img/hd4rblq8DW7sPIt8FWcRq1HdmQ0.webp' },
-  { slug: 'haven-realty', name: 'Haven Realty', title: 'A pipeline of sellers, not just clicks', kind: 'Real estate', services: 'Paid ads;Web design', metric: 'Seller leads a month', from: '14', to: '122', unit: '', year: '2024', sum: 'A new site with valuation landing pages and Google campaigns for every neighbourhood.', img: 'assets/img/zEqvjQAlVPs2PE6oz2TsexQ8TA.webp' },
-  { slug: 'lumen-skin', name: 'Lumen Skin', title: 'A skincare launch that sold out twice', kind: 'Beauty', services: 'Social media;Branding', metric: 'Launch-week revenue', from: '$18k', to: '$142k', unit: '', year: '2024', sum: 'Brand, creators and a TikTok launch plan built in six weeks.', img: 'assets/img/QSuLrUGcfrrneXqjDG4ZKyC91Gk.webp' },
-  { slug: 'orbit-legal', name: 'Orbit Legal', title: 'Thought leadership that books consultations', kind: 'Law firm', services: 'Content;SEO', metric: 'Consultations a month', from: '9', to: '57', unit: '', year: '2024', sum: 'Weekly LinkedIn posts and long-form guides that rank and get shared by clients.', img: 'assets/img/csWXqRpXZMLSqxx74oKZj5QkJw.webp' },
+  { slug: 'northside-dental', name: 'Northside Dental', title: 'From page 4 to the top 3 for “dentist near me”', kind: 'Dental clinic', services: 'SEO;Content', metric: 'Organic visits a month', from: '4,200', to: '38,900', unit: '', year: '2025', sum: 'A local SEO rebuild: 60 location pages, 180 reviews and a content plan for every treatment.', img: '/assets/img/iQ0lX69C3YgeRjqffxWadnnAmnc.webp' },
+  { slug: 'kettlebrook-coffee', name: 'Kettlebrook Coffee', title: 'A coffee brand people film for us', kind: 'Food & drink', services: 'Social media;Content', metric: 'Instagram followers', from: '8,100', to: '96,400', unit: '', year: '2025', sum: 'Three reels a week shot in the roasteries turned a local brand into a national one.', img: '/assets/img/myjp4zr3op66cJhewFtasNpY5I.webp' },
+  { slug: 'fitloop', name: 'Fitloop', title: 'Paid ads that pay for themselves in 11 days', kind: 'Fitness app', services: 'Paid ads', metric: 'Return on ad spend', from: '1.4', to: '6.2', unit: '×', year: '2025', sum: 'We rebuilt the Meta account around creative testing and cut the cost per trial by 58%.', img: '/assets/img/hd4rblq8DW7sPIt8FWcRq1HdmQ0.webp' },
+  { slug: 'haven-realty', name: 'Haven Realty', title: 'A pipeline of sellers, not just clicks', kind: 'Real estate', services: 'Paid ads;Web design', metric: 'Seller leads a month', from: '14', to: '122', unit: '', year: '2024', sum: 'A new site with valuation landing pages and Google campaigns for every neighbourhood.', img: '/assets/img/zEqvjQAlVPs2PE6oz2TsexQ8TA.webp' },
+  { slug: 'lumen-skin', name: 'Lumen Skin', title: 'A skincare launch that sold out twice', kind: 'Beauty', services: 'Social media;Branding', metric: 'Launch-week revenue', from: '$18k', to: '$142k', unit: '', year: '2024', sum: 'Brand, creators and a TikTok launch plan built in six weeks.', img: '/assets/img/QSuLrUGcfrrneXqjDG4ZKyC91Gk.webp' },
+  { slug: 'orbit-legal', name: 'Orbit Legal', title: 'Thought leadership that books consultations', kind: 'Law firm', services: 'Content;SEO', metric: 'Consultations a month', from: '9', to: '57', unit: '', year: '2024', sum: 'Weekly LinkedIn posts and long-form guides that rank and get shared by clients.', img: '/assets/img/csWXqRpXZMLSqxx74oKZj5QkJw.webp' },
 ];
 const START = 0.85; // divider resting position (mostly "before")
 const HOLD = 0.15; // divider position once the story has played
@@ -70,19 +70,19 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 function caseHTML(c, key, cls) {
   const a = afterPath(c.slug);
   return `<div class="rwwk-case ${cls}"${cls.includes('is-out') ? ' aria-hidden="true"' : ''}>
-  <div class="rwwk-lay rwwk-after"><img src="${c.img}" alt="" loading="lazy" decoding="async" draggable="false"><i class="rwwk-scrim"></i>
+  <div class="rwwk-lay rwwk-after"><img src="${c.img}" srcset="${srcsetFor(c.img, 2000)}" sizes="(max-width: 809px) 94vw, 95vw" alt="" loading="lazy" decoding="async" draggable="false"><i class="rwwk-scrim"></i>
     <svg class="rwwk-ch rwwk-ch-a" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="rwwk-g-${key}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--rw-brass)" stop-opacity=".42"/><stop offset="1" stop-color="var(--rw-brass)" stop-opacity="0"/></linearGradient></defs><path d="${a} L1000,300 L0,300 Z" fill="url(#rwwk-g-${key})"/><path d="${a}" class="rwwk-ln" vector-effect="non-scaling-stroke"/></svg>
     <div class="rwwk-num rwwk-num-a"><span class="rwwk-pill is-a f-m"><i></i>After</span><span class="rwwk-big f-d"><span data-big>${esc(c.to + c.unit)}</span></span></div></div>
-  <div class="rwwk-lay rwwk-before"><img src="${c.img}" alt="" loading="lazy" decoding="async" draggable="false"><i class="rwwk-scrim"></i>
+  <div class="rwwk-lay rwwk-before"><img src="${c.img}" srcset="${srcsetFor(c.img, 2000)}" sizes="(max-width: 809px) 94vw, 95vw" alt="" loading="lazy" decoding="async" draggable="false"><i class="rwwk-scrim"></i>
     <svg class="rwwk-ch rwwk-ch-b" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><path d="${beforePath(c.slug)}" class="rwwk-fl" vector-effect="non-scaling-stroke"/></svg>
     <div class="rwwk-num rwwk-num-b"><span class="rwwk-pill f-m">Before</span><span class="rwwk-ghost f-d">${esc(c.from + c.unit)}</span></div></div>
 </div>`;
 }
 function infoHTML(c) {
   return `<div class="rwwk-info-in"><div class="rwwk-il"><p class="rwwk-meta f-m"><span>${esc(c.kind)}</span><span>${esc(c.year)}</span></p>
-  <h3 class="rwwk-title f-d"><a href="work-${c.slug}.html">${esc(c.title)}</a></h3></div>
+  <h3 class="rwwk-title f-d"><a href="/work-${c.slug}">${esc(c.title)}</a></h3></div>
   <div class="rwwk-ir"><p class="rwwk-sum">${esc(c.sum)}</p><div class="rwwk-foot"><span class="rwwk-svs f-m">${c.services.split(';').map((s) => `<span>${esc(s)}</span>`).join('')}</span>
-  <a class="rwwk-read f-m" href="work-${c.slug}.html">Read the case<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></div></div></div>`;
+  <a class="rwwk-read f-m" href="/work-${c.slug}">Read the case<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></div></div></div>`;
 }
 
 /* ------------------------------------------------------------ state */

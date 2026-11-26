@@ -293,6 +293,7 @@ doc.addEventListener('click', (e) => {
   if (!target) return;
   e.preventDefault();
   scrollToTarget(target);
+  if (target.hasAttribute('tabindex')) target.focus({ preventScroll: true }); // skip link: move keyboard focus too
   try {
     history.pushState(null, '', '#' + id);
   } catch {}
@@ -330,6 +331,17 @@ export function clock(tz = 'America/New_York', seconds = false) {
   } catch {
     return '--:--';
   }
+}
+
+/**
+ * srcset for a WebP in /assets/img that is `w` pixels wide. Smaller copies named name-640.webp,
+ * name-1024.webp and name-1280.webp exist for every step below 85% of the original width.
+ */
+export function srcsetFor(src, w) {
+  const steps = [640, 1024, 1280].filter((s) => s < w * 0.85);
+  if (!steps.length || !src.endsWith('.webp')) return '';
+  const base = src.slice(0, -5);
+  return [...steps.map((s) => `${base}-${s}.webp ${s}w`), `${src} ${w}w`].join(', ');
 }
 
 export const SITE = {
@@ -372,6 +384,7 @@ export function rollTo(el, text, prefix) {
     frag.appendChild(rd);
   });
   el.replaceChildren(frag);
+  el.setAttribute('role', 'img');
   el.setAttribute('aria-label', text);
   el._digits = chars;
 }
@@ -388,6 +401,7 @@ export function numberText(el, ms = 1600, delay = 200) {
   const dec = m[2].includes('.') ? m[2].split('.')[1].length : 0;
   const grp = m[2].includes(',');
   const fmt = (v) => `${m[1]}${grp ? v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toFixed(dec)}${m[3]}`;
+  el.setAttribute('role', 'img');
   el.setAttribute('aria-label', final);
   return {
     run() {

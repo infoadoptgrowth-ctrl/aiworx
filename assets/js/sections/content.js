@@ -1,11 +1,11 @@
 /* Content: a wall of client posts in columns that drift against each other with scroll and skew with scroll speed. */
-import { $, win, onTick, onBreakpoint, bootSection, magnetic, scrollProgress, reducedMotion } from '../core.js';
+import { $, win, srcsetFor, onTick, onBreakpoint, bootSection, magnetic, scrollProgress, reducedMotion } from '../core.js';
 
 const POSTS = `xbfdpTvZzzafiJOwtXCs0luyp2I|@kettlebrook.coffee|2418|post;1DPklcMWo4iq1F5uWVjcytvrsc|@lumenskin|8114|carousel|5;yOk3vEq9TQ9CWpwuFmZY86mAVY|@fitloop|3912|reel|48k;s0jwUqVTFxGplLAwU0WLa8rbdw|@parcel.co|5630|post;YpYjh1duUyRdFMaCaQZ6JVDbmko|@tallow.kitchen|1204|post;HeKFyo7MfYy7GEQSGOPGXvhVHvo|@brightline.run|9870|reel|112k;oSWgZWTjPoakKUa7CvtJ6TXueP0|@lumenskin|3307|carousel|3;3nqFQlS1bXsh1PS74cijri0AhSM|@verde.studio|1786|post;yg9StsTkn2mS5VxfA3YnyrJNM1Q|@haven.realty|2205|reel|21k;mnE5eA5CunHm89doTbOt2H7pHdE|@verde.studio|2874|carousel|4;uYN9bcKFZFsqzLzQWUSswf4QIs|@tallow.kitchen|2951|carousel|6;eMqxq3byjv5ceZYESvRLuMWVug|@parcel.co|3690|post;xbfdpTvZzzafiJOwtXCs0luyp2I|@kettlebrook.coffee|1932|post;yOk3vEq9TQ9CWpwuFmZY86mAVY|@fitloop|4480|reel|64k;1DPklcMWo4iq1F5uWVjcytvrsc|@lumenskin|2660|carousel|3;3nqFQlS1bXsh1PS74cijri0AhSM|@verde.studio|1417|post;HeKFyo7MfYy7GEQSGOPGXvhVHvo|@brightline.run|6042|reel|31k;oSWgZWTjPoakKUa7CvtJ6TXueP0|@lumenskin|1118|carousel|5;s0jwUqVTFxGplLAwU0WLa8rbdw|@parcel.co|2336|post;uYN9bcKFZFsqzLzQWUSswf4QIs|@tallow.kitchen|2074|carousel|4`
   .split(';')
   .map((row) => {
     const [img, handle, likes, kind, extra = ''] = row.split('|');
-    return { src: `assets/img/${img}.webp`, handle, likes: Number(likes), kind, extra };
+    return { src: `/assets/img/${img}.webp`, handle, likes: Number(likes), kind, extra };
   });
 /* avatar tints drawn from the AiWorx palette */
 const AVATARS = ['#D4F905', '#7CB203', '#E3F79A', '#B6E35A', '#A6D96A', '#C6EB5C'];
@@ -39,9 +39,9 @@ function card(p, col, row) {
   }
   const letter = p.handle.replace(/^@/, '').charAt(0).toUpperCase();
   return `<article class="rwfd-card is-${p.kind}" style="transition-delay:${col * 70 + row * 40}ms">
-  <div class="rwfd-media" style="aspect-ratio:${ratio}"><img src="${p.src}" alt="Post by ${p.handle}" loading="lazy" decoding="async" draggable="false">${extra}</div>
+  <div class="rwfd-media" style="aspect-ratio:${ratio}"><img src="${p.src}" srcset="${srcsetFor(p.src, 1080)}" sizes="(max-width: 809px) 44vw, 18vw" alt="Post by ${p.handle}" loading="lazy" decoding="async" draggable="false">${extra}</div>
   <div class="rwfd-meta"><i class="rwfd-av f-d" aria-hidden="true" style="--av:${avatar(p.handle)}">${letter}</i><span class="rwfd-hd">${p.handle}</span>
-  <span class="rwfd-like f-m"><span class="rwfd-heart">${HEART}<i class="rwfd-ring" aria-hidden="true"></i></span><span class="rwfd-roll" aria-label="${n(p.likes)} likes"><b aria-hidden="true">${n(p.likes)}</b><b aria-hidden="true">${n(p.likes + 1)}</b></span></span></div>
+  <span class="rwfd-like f-m"><span class="rwfd-heart">${HEART}<i class="rwfd-ring" aria-hidden="true"></i></span><span class="rwfd-roll" role="img" aria-label="${n(p.likes)} likes"><b aria-hidden="true">${n(p.likes)}</b><b aria-hidden="true">${n(p.likes + 1)}</b></span></span></div>
 </article>`;
 }
 

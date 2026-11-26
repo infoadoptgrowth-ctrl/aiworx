@@ -54,6 +54,7 @@ function renderCount(n) {
   const off = prevDigits.length - chars.length;
   const roll = doc.createElement('span');
   roll.className = 'rwh-roll';
+  roll.setAttribute('role', 'img');
   roll.setAttribute('aria-label', text);
   const existing = $$(':scope > span', $('.rwh-roll', countEl) || doc.createElement('span'));
   chars.forEach((c, i) => {

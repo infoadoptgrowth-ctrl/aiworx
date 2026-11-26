@@ -41,14 +41,14 @@ const priv = $('.rwct-priv', sec);
 const goLbls = $$('.rwct-go .rw-l1, .rwct-go .rw-l2', sec);
 const setLabel = (t) => goLbls.forEach((l) => (l.textContent = t));
 if (priv) priv.setAttribute('aria-live', 'polite');
-/* the button is a link to contact.html (no-JS fallback); keep the page transition from following it */
+/* the button is a link to /contact (no-JS fallback); keep the page transition from following it */
 $('.rwct-go', sec).setAttribute('data-no-trans', '');
 let state = 'idle'; // idle | sending | sent
 function toContact(email, budget) {
   const q = new URLSearchParams();
   if (email) q.set('email', email);
   if (budget) q.set('budget', budget);
-  window.location.href = `contact.html${q.toString() ? `?${q}` : ''}#start`;
+  window.location.href = `/contact${q.toString() ? `?${q}` : ''}#start`;
 }
 async function submit(e) {
   e.preventDefault();

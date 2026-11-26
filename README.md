@@ -33,14 +33,28 @@ vendored in `assets/vendor/`.
 
 ## Run it locally
 
-ES modules do not load from `file://`, so serve the folder over HTTP:
+Internal links use clean URLs (`/about`, not `about.html`), as Vercel serves them, so use the bundled
+preview server rather than a plain static server:
 
 ```bash
-python3 -m http.server 8080
+npm run dev
 ```
 
-Then open <http://localhost:8080>. Any static host (Netlify, Vercel, GitHub Pages, S3, nginx) can serve
-the folder as-is.
+Then open <http://localhost:8080>. It mirrors the Vercel setup: `/about` serves `about.html`,
+`/about.html` redirects to `/about`, unknown paths return `404.html` with a 404 status, and
+`POST /api/contact` runs the form function. No dependencies are needed beyond `npm install`.
+
+## SEO conventions
+
+- Links and asset paths are root-relative and extension-less: `/services`, `/assets/img/x.webp`.
+- Each page's `<head>` carries a unique title, description, self-referencing canonical on
+  `https://aiworxllc.com`, Open Graph/Twitter tags (share image `assets/img/og-cover.jpg`) and a
+  JSON-LD `@graph` (`<script type="application/ld+json" data-seo>`). Keep them in sync when adding a page.
+- New pages go into `sitemap.xml`; `robots.txt` points to it. `404.html` is `noindex`.
+- Large photos have smaller copies next to them (`name-160/640/1024/1280.webp`) used through
+  `srcset`/`sizes`; scripts build the same with `srcsetFor()` from `assets/js/core.js`.
+- Images below the first screen use `loading="lazy"`; first-screen images and the home hero do not.
+- See `SEO-REPORT.md` for the full audit and what still needs doing outside the code.
 
 ## Form emails (SMTP)
 
