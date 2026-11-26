@@ -42,6 +42,24 @@ python3 -m http.server 8080
 Then open <http://localhost:8080>. Any static host (Netlify, Vercel, GitHub Pages, S3, nginx) can serve
 the folder as-is.
 
+## Form emails (SMTP)
+
+The contact page form and the "free audit" form on every page post to `api/contact.js`, a Vercel
+function that sends the submission through an SMTP mailbox. Set these in Vercel → Project → Settings →
+Environment Variables, then redeploy:
+
+| Variable | Example | Notes |
+| --- | --- | --- |
+| `SMTP_HOST` | `mail.example-host.com` | The mail server hostname from cPanel → Email Accounts → Connect Devices |
+| `SMTP_PORT` | `465` | `465` (SSL) or `587` (STARTTLS) |
+| `SMTP_USER` | `hello@aiworxllc.com` | Full mailbox address |
+| `SMTP_PASS` | (mailbox password) | Mark as Sensitive |
+| `MAIL_TO` | `hello@aiworxllc.com` | Optional; where submissions go (comma-separate several). Defaults to `SMTP_USER` |
+| `MAIL_FROM` | `hello@aiworxllc.com` | Optional; defaults to `SMTP_USER` |
+
+Replies go straight to the visitor (the email's Reply-To is their address). If sending fails, the
+contact form shows the visitor a direct email link and the audit form opens the contact page.
+
 ## Structure
 
 ```

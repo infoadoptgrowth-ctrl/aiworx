@@ -464,6 +464,7 @@
 }
 .rwrv.is-ph .rwrv-nm {
   min-width: 0;
+  flex: 1 1 calc(100% - 46px);
 }
 .rwrv.is-ph .rwrv-panel {
   grid-template-columns: 1fr;

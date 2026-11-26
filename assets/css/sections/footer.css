@@ -293,7 +293,11 @@
   grid-template-columns: 1fr 1fr;
   gap: 36px 20px;
 }
+.rwft.is-ph .rwft-col ul:not(.rwft-soc) {
+  gap: 0;
+}
 .rwft.is-ph .rwft-col a {
+  padding: 11px 0;
   font-size: 15px;
   overflow-wrap: anywhere;
 }
@@ -301,7 +305,12 @@
   grid-column: 1/-1;
 }
 .rwft.is-ph .rwft-soc a {
+  padding: 12px 14px;
   font-size: 12px;
+}
+.rwft.is-ph .rwft-legal a {
+  display: inline-block;
+  padding: 12px 0;
 }
 .rwft.is-ph .rwft-legal {
   flex-direction: column;

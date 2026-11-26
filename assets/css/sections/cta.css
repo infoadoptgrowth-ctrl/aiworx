@@ -368,6 +368,9 @@
 .rwct.is-ph .rwct-sub {
   font-size: 16px;
 }
+.rwct.is-ph .rwct-f select {
+  font-size: 16px;
+}
 @media (prefers-reduced-motion: reduce) {
   .rwct-bar i {
     animation: none !important;
