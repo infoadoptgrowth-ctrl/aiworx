@@ -240,7 +240,7 @@ function startGL() {
         if (t - lastHit[i] < 7) return;
         const [x, y] = toScreen(nx, ny, fx, fy);
         if (x < 90 || x > W - 110 || y < 190 || y > H - 190) return;
-        if (x + hr.left > cr.left - 40 && x + hr.left < cr.right + 40 && y + hr.top > cr.top - 30 && y + hr.top < cr.bottom + 20) return;
+        if (x + hr.left > cr.left - 40 && x + hr.left < cr.right + 40 && y + hr.top > cr.top - 30 && y + hr.top < cr.bottom + 72) return; // chips draw ~60px above their anchor
         if (Math.abs(Math.hypot(x - p[0], y - p[1]) - R) > 14) return;
         lastHit[i] = t;
         popChip(x, y);

@@ -623,6 +623,10 @@
 .rwh.is-ph .rwh-chip {
   font-size: 12px;
 }
+/* the fixed-position fallback chips land on the headline and buttons in the tall phone layout */
+.rwh.is-ph .rwh-chip[data-s] {
+  display: none;
+}
 .rwh.is-ph .rwh-stillring {
   width: 300px;
   height: 300px;
