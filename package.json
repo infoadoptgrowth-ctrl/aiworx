@@ -1,0 +1,9 @@
+{
+  "name": "aiworx-site",
+  "private": true,
+  "description": "AiWorx LLC website: static pages plus one Vercel function that emails form submissions over SMTP",
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "nodemailer": "10.3.1"
+  }
+}

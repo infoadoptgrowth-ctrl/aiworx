@@ -1,4 +1,4 @@
-/* Contact page: project form (validation, service chips, sends via the visitor's email app), success panel,
+/* Contact page: project form (validation, service chips, sends through /api/contact), success panel,
    live studio clock + opening hours, and a deck of contact cards that fans out as you scroll. */
 import { $, $$, win, onTick, bootSection, magnetic, nearViewport, clamp01, reducedMotion, SITE } from '../core.js';
 
@@ -83,7 +83,7 @@ function success(name) {
   form.insertAdjacentHTML('afterend', `<div class="rwco-ok" aria-live="polite"><span class="rwco-rings" aria-hidden="true"><i></i><i></i><i></i></span>
     <p class="rwco-chip f-m"><i class="rwco-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-9" fill="none" stroke="currentColor"/></svg></i><span><b>AiWorx</b> · now</span></p>
     <h2 class="f-d" tabindex="-1">Got it — we reply within 2 hours</h2>
-    <p class="rwco-okt">Your email app opened with the message ready${first ? `, ${first}` : ''} — hit send and we'll take it from there.</p>
+    <p class="rwco-okt">Thanks${first ? `, ${first}` : ''} — your message is in our inbox. We'll reply from ${SITE.email}.</p>
     <p class="rwco-okm f-m"><a href="mailto:${SITE.email}">${SITE.email}</a></p>
     <button type="button" class="rwco-again f-m">Send another message</button></div>`);
   setTimeout(() => $('.rwco-ok h2', box)?.focus({ preventScroll: true }), 60);
@@ -100,27 +100,71 @@ function reset() {
   setTimeout(() => field('name').focus(), 60);
 }
 
-form.addEventListener('submit', (e) => {
+/* form-level message (send failures), shown above the submit button */
+function formError(msg) {
+  let p = $('#rwco-e-form', form);
+  if (!msg) {
+    if (p) p.hidden = true;
+    return;
+  }
+  if (!p) {
+    p = document.createElement('p');
+    p.id = 'rwco-e-form';
+    p.className = 'rwco-err f-m';
+    p.setAttribute('role', 'alert');
+    $('.rwco-sub', form).before(p);
+  }
+  p.hidden = false;
+  p.innerHTML = `<i aria-hidden="true">!</i>${msg}`;
+}
+
+let sending = false;
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (sending) return;
   const errs = check();
   ['name', 'email', 'message'].forEach((n) => (touched.add(n), showError(n, errs[n])));
   const bad = ['name', 'email', 'message'].find((n) => errs[n]);
   if (bad) return field(bad).focus();
   if (form.elements.company_url?.value) return success(''); // honeypot: quietly accept
   const v = (n) => field(n)?.value.trim() || '';
-  const services = $$('input[name="services"]:checked', form).map((c) => c.value);
-  const details = [
-    `Name: ${v('name')}`,
-    `Email: ${v('email')}`,
-    v('company') && `Company: ${v('company')}`,
-    v('website') && `Website: ${v('website')}`,
-    v('budget') && `Budget: ${v('budget')}`,
-    services.length > 0 && `Services: ${services.join(', ')}`,
-  ].filter(Boolean);
-  const lines = [...details, '', v('message')];
-  const subject = `New enquiry — ${v('name')}${v('company') ? ` (${v('company')})` : ''}`;
-  window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
-  success(v('name'));
+  const data = {
+    form: 'contact',
+    name: v('name'),
+    email: v('email'),
+    company: v('company'),
+    website: v('website'),
+    budget: v('budget'),
+    services: $$('input[name="services"]:checked', form).map((c) => c.value),
+    message: v('message'),
+    page: location.pathname,
+  };
+
+  const btn = $('.rwco-sub', form);
+  const lbls = $$('.rw-l1, .rw-l2', btn);
+  sending = true;
+  formError('');
+  btn.setAttribute('aria-busy', 'true');
+  btn.disabled = true;
+  lbls.forEach((l) => (l.textContent = 'Sending…'));
+  try {
+    const r = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const out = await r.json().catch(() => ({}));
+    if (r.ok && out.ok) return success(data.name);
+    if (['name', 'email', 'message'].includes(out.field)) {
+      showError(out.field, out.error);
+      return field(out.field).focus();
+    }
+    throw new Error(out.error || 'send failed');
+  } catch {
+    const subject = encodeURIComponent(`New enquiry — ${data.name}`);
+    formError(`We couldn't send that just now. Please try again, or email us at <a href="mailto:${SITE.email}?subject=${subject}">${SITE.email}</a>.`);
+  } finally {
+    sending = false;
+    btn.setAttribute('aria-busy', 'false');
+    btn.disabled = false;
+    lbls.forEach((l) => (l.textContent = 'Send message'));
+  }
 });
 
 /* ---------------------------------------------------------- studio clock + opening hours (Mon–Fri 09:00–18:00) */
